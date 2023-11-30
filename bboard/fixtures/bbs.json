@@ -1,0 +1,72 @@
+[
+  {
+    "model": "bboard.bb",
+    "pk": 1,
+    "fields": {
+      "kind": "s",
+      "rubric": 1,
+      "title": "Плотина",
+      "content": "Бобер ее строил",
+      "price": "100500.00",
+      "is_active": false,
+      "published": "2023-11-23T13:46:25.130Z",
+      "updated": "2023-11-28T13:21:02.940Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 2,
+    "fields": {
+      "kind": "s",
+      "rubric": 2,
+      "title": "Гроб на колесах",
+      "content": "Не на ходу",
+      "price": "100.00",
+      "is_active": false,
+      "published": "2023-11-23T13:46:51.452Z",
+      "updated": "2023-11-28T13:21:02.940Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 3,
+    "fields": {
+      "kind": "s",
+      "rubric": 1,
+      "title": "Бобер",
+      "content": "вв",
+      "price": "40.00",
+      "is_active": false,
+      "published": "2023-11-28T14:59:58.665Z",
+      "updated": "2023-11-28T14:59:58.665Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 4,
+    "fields": {
+      "kind": "s",
+      "rubric": 1,
+      "title": "Бобер",
+      "content": "вв",
+      "price": "40.00",
+      "is_active": false,
+      "published": "2023-11-28T15:01:44.040Z",
+      "updated": "2023-11-28T15:01:44.040Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 5,
+    "fields": {
+      "kind": "s",
+      "rubric": 1,
+      "title": "Бобер",
+      "content": "ыф",
+      "price": "40.00",
+      "is_active": false,
+      "published": "2023-11-28T15:03:26.162Z",
+      "updated": "2023-11-28T15:03:26.162Z"
+    }
+  }
+]

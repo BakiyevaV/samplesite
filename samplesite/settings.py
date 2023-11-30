@@ -130,3 +130,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ABSOLUTE_URL_OVERRIDES = {
 #     'bboard.rubric': lambda rec: f"/bboard/{rec.pk}/",
 # }
+

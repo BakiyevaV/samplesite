@@ -13,19 +13,20 @@ def validate_even(val):
     if val % 2 !=0:
         raise ValidationError('Число %(value)s нечетное', code='odd', params={'value':val})
 
-class MinMaxValueValidator:
-    def __init__(self, min_value, max_value):
-        self.min_value = min_value
-        self.max_value = max_value
-
-    def __call__(self,val):
-        if val < self.min_value or val > self.max_value:
-            raise ValidationError('Число %(value)s должно находиться в диапазоне от: %(min)s до: %(max)s ',
-                                  code='out_of_range', params={'value':val, 'min': self.min_value, 'max': self.max_value})
+# class MinMaxValueValidator:
+#     def __init__(self, min_value, max_value):
+#         self.min_value = min_value
+#         self.max_value = max_value
+#
+#     def __call__(self,val):
+#         if val < self.min_value or val > self.max_value:
+#             raise ValidationError('Число %(value)s должно находиться в диапазоне от: %(min)s до: %(max)s ',
+#                                   code='out_of_range', params={'value':val, 'min': self.min_value, 'max': self.max_value})
 
 
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название',unique=True) #unique for day,/unique for month
+    # slug = models.SlugField (max_length = 160, unique = True)
     #db_index индексация поиска, бинарные деревья
 
     def __str__(self):
@@ -86,7 +87,7 @@ class Bb(models.Model):
 
     title = models.CharField(max_length=50, verbose_name="Товар",validators=[validators.RegexValidator(regex='^.{4,}$')], error_messages= {'invalid':'Зачем вводишь некорректные данные?'})
     content = models.TextField(null=True, blank=True, verbose_name="Описание")
-    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even,MinMaxValueValidator(25, 45)])# +default= 0.0 дефолтное значение #
+    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even])# +default= 0.0 дефолтное значение #
     is_active = models.BooleanField(default=is_all_posts_passive)
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Опубликовано")#auto_now_add - заполнение поля текущим временем в момент создания не изменяется
     updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Опубликовано")#auto_now - заполнение поля текущим временем в момент создания обновляемое
