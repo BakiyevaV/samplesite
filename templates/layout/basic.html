@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Главная{% endblock %} :: Доска объявлений</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>Объявления</h1>
+</header>
+
+<nav>
+    <a href="{% url 'index' %}">Главная</a>
+    <a href="{% url 'add' %}">Подать объявление</a>
+    {% for rubric in rubrics %}
+        <a href="{#% url 'by_rubric' rubric.pk %#}{{ rubric.get_absolute_url }}">{{ rubric }}</a>
+    {% endfor %}
+    <a href="{% url 'registration' %}">Личный кабинет</a>
+
+</nav>
+
+<section>
+    {% block content %}
+    {% endblock %}
+</section>
+
+</body>
+</html>
