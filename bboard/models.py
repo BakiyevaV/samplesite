@@ -52,7 +52,8 @@ class Bb(models.Model):
     class Kinds(models.TextChoices):
         BUY = 'b','Куплю'
         SELL= 's', 'Продам'
-        RENT = 'r'
+        RENT = 'r', 'Аренда'
+        PRESENT = 'p', 'Дар'
         __empty__ = 'Выберите тип объявления'
     '''KINDS = (
         ('b', 'Куплю'),
@@ -94,7 +95,7 @@ class Bb(models.Model):
     """типы полей:
     -charfield - текстовое поле (обязательно max_length)
     -textfield - текстовое поле (не обязательно max_length)
-    -emailField (не обязательно max_length)
+    -emailField (не обязательно max_lengt
     -urlField 
     -SlugField (max_length = 50, allow_unicode = True)
     -NullBooleanField
