@@ -7,26 +7,32 @@
     <title>{% block title %}Главная{% endblock %} :: Доска объявлений</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
-<body>
-
-<header>
-    <h1>Объявления</h1>
-</header>
-
-<nav>
-    <a href="{% url 'index' %}">Главная</a>
-    <a href="{% url 'add' %}">Подать объявление</a>
-    {% for rubric in rubrics %}
+<body class = 'body'>
+    <header>
+        <a href="{% url 'add' %}">Подать объявление</a>
+        <a href="{% url 'registration' %}">Вход и регистрация</a>
+    </header>
+    <div class = 'rubrics'>
+     {% for rubric in rubrics %}
         <a href="{#% url 'by_rubric' rubric.pk %#}{{ rubric.get_absolute_url }}">{{ rubric }}</a>
     {% endfor %}
-    <a href="{% url 'registration' %}">Личный кабинет</a>
-
-</nav>
-
-<section>
-    {% block content %}
-    {% endblock %}
-</section>
+    </div>
+    <div class = "main">
+        <div class = 'top_ann'>Ваши объявления могут быть в топе</div>
+        <section>
+            {% block content %}
+            {% endblock %}
+        </section>
+        <div class = 'advert'>Здесь может быть ваша реклама</div>
+    </div>
+    <footer>
+        <div class = 'info'>
+            <a href="{% url 'about'%}">About</a>
+            <a href="{% url 'contacts' %}">Contacts</a>
+        </div>
+        <p class="text">Крупнейший онлайн-сервис объявлений.Здесь вы найдете то, что искали! Нажав на кнопку "Подать объявление", вы сможете разместить объявление на любую тематику легко и быстро.
+        С помощью нащшего сервиса вы сможете купить или продать из рук в руки практически все, что угодно.</p>
+    </footer>
 
 </body>
 </html>
