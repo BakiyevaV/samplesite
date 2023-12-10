@@ -36,9 +36,9 @@ def about_us(request):
     content = ["Некоммерческий проект.",
                 "Наша цель-построить среду объединяющую продавца и покупателя для их комфортного и безопасного сотрудничества."]
     context = {'content': content}
-    return render(request, 'about.html', context)
+    return render(request, 'footer.html', context)
 
 def contacts(request):
     content = ["сот: + 7 747 777 77 77","Адрес: г.Алматы, ул.Карасай батыра 189 "]
     context = {'content': content}
-    return render(request, 'contacts.html', context)
+    return render(request, 'footer.html', context)

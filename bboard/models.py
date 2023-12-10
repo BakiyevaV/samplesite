@@ -5,6 +5,11 @@ from django.db import models
 
 is_all_posts_passive = False
 
+class PositivePriceValidator():
+    def __call__(self,val):
+        if val < 0:
+            raise ValidationError('Стоимость не должна быть меньше нуля', code='negative', params={'value':val})
+
 def is_active():
     return is_all_posts_passive
 
@@ -87,7 +92,7 @@ class Bb(models.Model):
 
     title = models.CharField(max_length=50, verbose_name="Товар",validators=[validators.RegexValidator(regex='^.{4,}$')], error_messages= {'invalid':'Зачем вводишь некорректные данные?'})
     content = models.TextField(null=True, blank=True, verbose_name="Описание")
-    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even])# +default= 0.0 дефолтное значение #
+    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even, PositivePriceValidator()])# +default= 0.0 дефолтное значение #
     is_active = models.BooleanField(default=is_all_posts_passive)
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Опубликовано")#auto_now_add - заполнение поля текущим временем в момент создания не изменяется
     updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Опубликовано")#auto_now - заполнение поля текущим временем в момент создания обновляемое
@@ -128,6 +133,13 @@ class Bb(models.Model):
             errors['content'] = ValidationError('Бобры не продаются')
             raise ValidationError(errors)
 
+    def id_title(self):
+        return f"{self.pk}_{self.title}"
+    def id_price(self):
+        sum = self.pk+self.price
+        return sum
+    def new_id(self):
+        return f"id{self.pk}"
 
     def title_and_price (self):
         if self.price:
