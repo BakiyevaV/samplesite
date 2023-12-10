@@ -49,10 +49,6 @@ class Rubric(models.Model):
         verbose_name_plural = 'Рубрики'
         verbose_name = 'Рубрика'
         ordering = ['name']
-
-
-
-
 class Bb(models.Model):
     class Kinds(models.TextChoices):
         BUY = 'b','Куплю'
@@ -81,6 +77,12 @@ class Bb(models.Model):
     #     ('с', 'Обменяю')
     # )
 
+    class Features(models.TextChoices):
+        NEW = 'n', 'Новый'
+        USED = 'u', 'Б\у'
+        ORDER = 'o', 'Под заказ'
+
+
 
 
     #kind = models.CharField(max_length=1, choices=KINDS,default='s')
@@ -92,10 +94,11 @@ class Bb(models.Model):
 
     title = models.CharField(max_length=50, verbose_name="Товар",validators=[validators.RegexValidator(regex='^.{4,}$')], error_messages= {'invalid':'Зачем вводишь некорректные данные?'})
     content = models.TextField(null=True, blank=True, verbose_name="Описание")
-    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even, PositivePriceValidator()])# +default= 0.0 дефолтное значение #
+    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even])# +default= 0.0 дефолтное значение #
     is_active = models.BooleanField(default=is_all_posts_passive)
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Опубликовано")#auto_now_add - заполнение поля текущим временем в момент создания не изменяется
-    updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Опубликовано")#auto_now - заполнение поля текущим временем в момент создания обновляемое
+    updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Опубликовано")
+    feature = models.CharField(max_length=1, choices=Features.choices, default=Features.USED, verbose_name="Свойство")#auto_now - заполнение поля текущим временем в момент создания обновляемое
     #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #editable=False вывод в форму)
     """типы полей:
     -charfield - текстовое поле (обязательно max_length)

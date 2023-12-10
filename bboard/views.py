@@ -9,9 +9,17 @@ from .models import Bb, Rubric
 def index(request):
     bbs = Bb.objects.order_by('-published')
     rubrics = Rubric.objects.all()
+    # for bb in bbs:
+    #     bb.title = f'{bb.title} ({bb.pk})'
+    #     bb.save()
+
+    for bb in bbs:
+        for i in range(len(bb.title)):
+            if bb.title[i].isdigit() and bb.title[i+1] == ')':
+                if int(bb.title[i]) % 2 != 0:
+                    bb.delete()
     context = {'bbs': bbs, 'rubrics': rubrics}
     return render(request, 'index.html', context)
-
 
 def by_rubric(request, rubric_id):
     bbs = Bb.objects.filter(rubric=rubric_id)
