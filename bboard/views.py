@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
@@ -9,21 +10,29 @@ from .models import Bb, Rubric
 def index(request):
     bbs = Bb.objects.order_by('-published')
     rubrics = Rubric.objects.all()
+    # # for bb in bbs:
+    # #     bb.title = f'{bb.title} ({bb.pk})'
+    # #     bb.save()
+    #
     # for bb in bbs:
-    #     bb.title = f'{bb.title} ({bb.pk})'
-    #     bb.save()
+    #     for i in range(len(bb.title)):
+    #         if bb.title[i].isdigit() and bb.title[i+1] == ')':
+    #             if int(bb.title[i]) % 2 != 0:
+    #                 bb.delete()
+    # rubrics = []
+    # for r in Rubric.objects.all():
+    #     if len(r.bb_set.all()) != 0:
+    #         rubrics.append(r)
 
-    for bb in bbs:
-        for i in range(len(bb.title)):
-            if bb.title[i].isdigit() and bb.title[i+1] == ')':
-                if int(bb.title[i]) % 2 != 0:
-                    bb.delete()
+    rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt = 0)
+
+    # rubrics = Rubric.objects.filter(bb__isnull = False ).distinct()
     context = {'bbs': bbs, 'rubrics': rubrics}
     return render(request, 'index.html', context)
 
 def by_rubric(request, rubric_id):
     bbs = Bb.objects.filter(rubric=rubric_id)
-    rubrics = Rubric.objects.all()
+    rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt=0)
     current_rubric = Rubric.objects.get(pk=rubric_id)
     context = {'bbs': bbs, 'rubrics': rubrics,
                'current_rubric': current_rubric}
