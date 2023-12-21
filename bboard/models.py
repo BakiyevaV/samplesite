@@ -158,3 +158,19 @@ class Bb(models.Model):
         verbose_name = 'Объявление'
         ordering = ['-published'] #можно несколько параметров
         # order_with_respect_to = 'rubric'
+
+
+class Comments(models.Model):
+    bb = models.ForeignKey("Bb", null=False, on_delete=models.CASCADE, verbose_name="Объявление")
+    comment_creator = models.CharField(max_length=30, verbose_name="Автор объявления")
+    comment = models.CharField(max_length=500, verbose_name="Комментарий")
+    issue_date = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Дата создания")
+    def __str__(self):
+        return f'{self.comment}'
+    class Meta:
+        # доп настройки модели
+        verbose_name_plural = 'Комментарии'
+        verbose_name = 'Комментарий'
+        ordering = ['-issue_date']  # можно несколько параметров
+        # order_with_respect_to = 'rubric'
+

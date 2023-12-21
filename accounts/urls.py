@@ -7,3 +7,4 @@ urlpatterns = [
     path('login/', login_view, name='login'),
 ]
 
+

@@ -9,12 +9,12 @@
 </head>
 <body class = 'body'>
     <header>
-        <a href="{% url 'add' %}">Подать объявление</a>
+        <a href="{% url 'bboard:add' %}">Подать объявление</a>
         <a href="{% url 'registration' %}">Вход и регистрация</a>
     </header>
     <div class = 'rubrics'>
      {% for rubric in rubrics %}
-        <a href="{#% url 'by_rubric' rubric.pk %#}{{ rubric.get_absolute_url }}">{{ rubric }} ({{rubric.cnt}})</a>
+        <a href="{#% url 'bboard:by_rubric' rubric.pk %#}{{ rubric.get_absolute_url }}">{{ rubric }} ({{rubric.cnt}})</a>
     {% endfor %}
     </div>
     <div class = "main">
@@ -27,8 +27,8 @@
     </div>
     <footer>
         <div class = 'info'>
-            <a href="{% url 'about'%}">About</a>
-            <a href="{% url 'contacts' %}">Contacts</a>
+            <a href="{% url 'bboard:about'%}">About</a>
+            <a href="{% url 'bboard:contacts' %}">Contacts</a>
         </div>
         <p class="text">Крупнейший онлайн-сервис объявлений.Здесь вы найдете то, что искали! Нажав на кнопку "Подать объявление", вы сможете разместить объявление на любую тематику легко и быстро.
         С помощью нащшего сервиса вы сможете купить или продать из рук в руки практически все, что угодно.</p>

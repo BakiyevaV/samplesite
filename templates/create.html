@@ -5,7 +5,7 @@
 {% block content %}
 <h2>Добавление объявления</h2>
 
-<form method="post">
+<form  method = "post"> # один контроллер отрисовывает форму, а второй обрабатывает данные с формы. Если контроллер один, то action не нужен
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Добавить">
