@@ -4,14 +4,9 @@
 <div class="grid">
 {% for bb in bbs %}
     <div class = 'content'>
-        <a href = "{% url 'bboard:bb_detail' bb.pk %}">{{ bb.title_and_price}}</a>
-        <h2>{{ bb.new_id}}</h2>
-        <h2>{{ bb.id_title}}</h2>
-        <p>{{ bb.content }}</p>
-        <p>
-            <a href="{% url 'bboard:by_rubric' bb.rubric.pk %}">{{ bb.rubric.name }}</a>
-        </p>
-        <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+        <h4>{{bb.title}}</h4>
+         <h4>{{bb.price}}</h4>
+         <h4>{{bb.content}}</h4>
     </div>
 {% endfor %}
 </div>

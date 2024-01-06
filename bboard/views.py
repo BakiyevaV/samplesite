@@ -9,12 +9,12 @@ from .forms import BbForm
 from .models import Bb, Rubric
 
 def index(request):
-    bbs = Bb.objects.all()
-    rubrics = Rubric.objects.annotate(cnt=Count("bb")).filter(cnt__gt=0)
+    bbs = Bb.objects.exclude(price__gte=1000.00)
+    print(bbs)
+    rubrics = Rubric.objects.all()
     context = {"bbs": bbs, "rubrics": rubrics}
-    # template = get_template('index.html')
-    # return HttpResponse(template.render(context=context, request=request))
-    return HttpResponse(render_to_string('index.html', context, request))
+    template = get_template('index.html')
+    return HttpResponse(template.render(context=context, request=request))
 
 # def index(request):
 #     response = HttpResponse("Здесь будет", content_type='text/plain; charset=UTF-8')
@@ -44,15 +44,20 @@ def index(request):
 #
 #     # rubrics = Rubric.objects.filter(bb__isnull = False ).distinct()
 #     context = {'bbs': bbs, 'rubrics': rubrics}
+#     context = {'bbs': bbs, 'rubrics': rubrics}
 #     return render(request, 'index.html', context)
 
 def by_rubric(request, rubric_id):
+    print(rubric_id)
     bbs = Bb.objects.filter(rubric=rubric_id)
-    rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt=0)
+    rubrics = Rubric.objects.annotate(cnt=Count("bb")).filter(cnt__gt=0)
     current_rubric = Rubric.objects.get(pk=rubric_id)
+    print("рубрика")
+    print(bbs)
     context = {'bbs': bbs, 'rubrics': rubrics,
                'current_rubric': current_rubric}
     return render(request, 'by_rubric.html', context)
+
 
 # def bb_create(request):
 #     bbf = BbForm()
@@ -73,27 +78,27 @@ def by_rubric(request, rubric_id):
 #         return render(request, 'create.html', context)
 
 
-def add_and_save(request):
-    print(request.headers["Accept-Encoding"])
-    print(request.headers["Cookie"])
-    print(request.resolver_match)
-    print(request.body)
-    if request.headers.get('x-request-with') == 'XMLHttpRequest':
-        if request.method == 'POST':
-            bbf = BbForm(request.POST)#данные после отправки
-            if bbf.is_valid():
-                bbf.save()
-                return HttpResponseRedirect(
-                    reverse('bboard:by_rubric',
-                    kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk})
-                )
-            else:
-                context = {'form': bbf}
-                return render(request, 'create.html', context)
-        else:
-            bbf = BbForm()
-            context = {'form': bbf}
-            return render(request, 'create.html', context)
+# def add_and_save(request):
+#     print(request.headers["Accept-Encoding"])
+#     print(request.headers["Cookie"])
+#     print(request.resolver_match)
+#     print(request.body)
+#     if request.headers.get('x-request-with') == 'XMLHttpRequest':
+#         if request.method == 'POST':
+#             bbf = BbForm(request.POST)#данные после отправки
+#             if bbf.is_valid():
+#                 bbf.save()
+#                 return HttpResponseRedirect(
+#                     reverse('bboard:by_rubric',
+#                     kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk})
+#                 )
+#             else:
+#                 context = {'form': bbf}
+#                 return render(request, 'create.html', context)
+#         else:
+#             bbf = BbForm()
+#             context = {'form': bbf}
+#             return render(request, 'create.html', context)
 
 
 
@@ -101,7 +106,7 @@ def add_and_save(request):
 class BbCreateView(CreateView):
     template_name = 'create.html'
     form_class = BbForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('bboard:index')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

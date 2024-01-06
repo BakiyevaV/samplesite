@@ -94,7 +94,7 @@ class Bb(models.Model):
 
     title = models.CharField(max_length=50, verbose_name="Товар",validators=[validators.RegexValidator(regex='^.{4,}$')], error_messages= {'invalid':'Зачем вводишь некорректные данные?'})
     content = models.TextField(null=True, blank=True, verbose_name="Описание")
-    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=8, decimal_places=2, validators=[validate_even])# +default= 0.0 дефолтное значение #
+    price = models.DecimalField(verbose_name="Цена",default=0, max_digits=12, decimal_places=2, validators=[validate_even])# +default= 0.0 дефолтное значение #
     is_active = models.BooleanField(default=is_all_posts_passive)
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Опубликовано")#auto_now_add - заполнение поля текущим временем в момент создания не изменяется
     updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Опубликовано")

@@ -9,6 +9,7 @@ body{
     margin: 0px;
     justify-content: space-between;
     color: white;
+    gap: 10px;
 
 }
 
@@ -75,9 +76,6 @@ footer{
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    position: fixed;
-    bottom: 0;
-
 }
 .main{
     margin-top: 20px;
@@ -86,6 +84,7 @@ footer{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 200px;
 }
 .top_ann{
     width: 20vw;
