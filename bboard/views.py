@@ -1,20 +1,13 @@
 from django.db.models import Count
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template, render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView
 
-from .forms import BbForm
-from .models import Bb, Rubric
+from .forms import BbForm,CommentsForm
+from .models import Bb, Rubric, Comments
 
-def index(request):
-    bbs = Bb.objects.exclude(price__gte=1000.00)
-    print(bbs)
-    rubrics = Rubric.objects.all()
-    context = {"bbs": bbs, "rubrics": rubrics}
-    template = get_template('index.html')
-    return HttpResponse(template.render(context=context, request=request))
 
 # def index(request):
 #     response = HttpResponse("Здесь будет", content_type='text/plain; charset=UTF-8')
@@ -23,29 +16,28 @@ def index(request):
 #     response['keywords'] = "python, django"
 #     return response
 
-# def index(request):
-#     bbs = Bb.objects.order_by('-published')
-#     rubrics = Rubric.objects.all()
-#     # # for bb in bbs:
-#     # #     bb.title = f'{bb.title} ({bb.pk})'
-#     # #     bb.save()
-#     #
-#     # for bb in bbs:
-#     #     for i in range(len(bb.title)):
-#     #         if bb.title[i].isdigit() and bb.title[i+1] == ')':
-#     #             if int(bb.title[i]) % 2 != 0:
-#     #                 bb.delete()
-#     # rubrics = []
-#     # for r in Rubric.objects.all():
-#     #     if len(r.bb_set.all()) != 0:
-#     #         rubrics.append(r)
-#
-#     rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt = 0)
-#
-#     # rubrics = Rubric.objects.filter(bb__isnull = False ).distinct()
-#     context = {'bbs': bbs, 'rubrics': rubrics}
-#     context = {'bbs': bbs, 'rubrics': rubrics}
-#     return render(request, 'index.html', context)
+def index(request):
+    bbs = Bb.objects.order_by('-published')
+    rubrics = Rubric.objects.all()
+    # # for bb in bbs:
+    # #     bb.title = f'{bb.title} ({bb.pk})'
+    # #     bb.save()
+    #
+    # for bb in bbs:
+    #     for i in range(len(bb.title)):
+    #         if bb.title[i].isdigit() and bb.title[i+1] == ')':
+    #             if int(bb.title[i]) % 2 != 0:
+    #                 bb.delete()
+    # rubrics = []
+    # for r in Rubric.objects.all():
+    #     if len(r.bb_set.all()) != 0:
+    #         rubrics.append(r)
+
+    rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt = 0)
+
+    # rubrics = Rubric.objects.filter(bb__isnull = False ).distinct()
+    context = {'bbs': bbs, 'rubrics': rubrics}
+    return render(request, 'index.html', context)
 
 def by_rubric(request, rubric_id):
     print(rubric_id)
@@ -124,21 +116,38 @@ def contacts(request):
     context = {'content': content}
     return render(request, 'footer.html', context)
 
-#class GetBbDetail()
 
-class BbDetailView(DetailView):
-    template_name = 'bb.html'
-    model = Bb
+def get_detail(request, bb_id):
+    bb = Bb.objects.get(pk=bb_id)
+    comments = Comments.objects.all().filter(bb=bb_id)
+    context = {'bb': bb, 'comments': comments}
+    print('Комментарии', comments)
+    return render(request, 'bb.html', context)
 
 
-
-
-# def detail(request, bb_id):
-#     try:
-#         bb = Bb.objects.get(pk = bb_id)
-#     except Bb.DoesNotExist:
-#         # return HttpResponseNotFound('Такое объявление не существует')
-#         raise Http404('Такое объявление не существует')
-#     return HttpResponse()
 
 #request.user.is_autenticated
+def create_comment(request, bb_id):
+    bb = get_object_or_404(Bb, pk=bb_id)
+    comments = Comments.objects.filter(bb=bb_id)
+    if request.method == 'POST':
+        form = CommentsForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.bb = bb
+            comment.save()
+            return redirect(reverse('bboard:get_detail', args = [bb_id]))
+    else:
+        form = CommentsForm()
+
+    return render(request, 'bb.html', {'form': form, 'bb': bb, 'comments':comments})
+
+def delete_comment(request, comment_id, bb_id):
+    Comments.objects.filter(pk=comment_id).delete()
+    return redirect(reverse('bboard:get_detail', args=[bb_id]))
+
+
+
+
+
+

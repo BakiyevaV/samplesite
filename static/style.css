@@ -109,3 +109,15 @@ footer{
     flex-direction: row;
     gap: 50px;
 }
+.comments{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.comment_row{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
