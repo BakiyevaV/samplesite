@@ -1,14 +1,45 @@
-{% extends "layout/basic.html" %}
-
-{% block content %}
-<div class="grid">
-{% for bb in bbs %}
-    <div class = 'content'>
-        <a href = "{% url 'bboard:get_detail' bb.pk %}">{{bb.title}}</a>
-        <h4>{{bb.price}}</h4>
-        <a href = "{% url 'bboard:by_rubric' bb.rubric.pk %}">{{bb.rubric.name}}</a>
-        <h4>{{bb.content}}</h4>
+{% extends "layout/_basic.html" %}
+{% load static %}
+  {% block content %}
+    <!-- Page Content -->
+    <!-- Items Starts Here -->
+    <div class="featured-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-sm-12">
+            <div class="section-heading">
+              <div class="line-dec"></div>
+              <h1>Featured Items</h1>
+            </div>
+          </div>
+          <div class="col-md-8 col-sm-12">
+            <div id="filters" class="button-group">
+              <div class = 'rubrics'>
+                {% for rubric in rubrics %}
+                <button class="btn btn-primary" data-filter="*">
+                      <a href="{#% url 'bboard:by_rubric' rubric.pk %#}{{ rubric.get_absolute_url }}">{{ rubric }} ({{rubric.cnt}})</a>
+                </button>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-{% endfor %}
-</div>
-{% endblock %}
+  
+    <div class="featured container no-gutter">
+
+        <div class="row posts">
+          {% for bb in bbs %}
+            <div id="{{ bb.pk }}" class="item new col-md-4">
+              <a href="single-product.html">
+                <div class="featured-item">
+                  <img src="{% static 'assets/images/product-01.jpg' %}" alt="">
+                  <h4><a href = "{% url 'bboard:get_detail' bb.pk %}">{{bb.title}}</a></h4>
+                  <h6>{{bb.price}}</h6>
+                  <h4>{{bb.content}}</h4>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+  {% endblock %}
