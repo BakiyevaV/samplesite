@@ -62,7 +62,8 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
+                'django.contrib.auth.context_processors.auth', #данные о User. Можно узнать что пользователь залогирован. User.is_authentificated
+
                 'django.contrib.messages.context_processors.messages',
             ],
         },
