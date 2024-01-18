@@ -121,3 +121,12 @@ footer{
     flex-direction: row;
     gap: 50px;
 }
+.b1 {
+    background-color: #5b80b2;
+}
+.b2 {
+    background-color: #575757;
+}
+.b3 {
+    background-color: #ffffcc;
+}

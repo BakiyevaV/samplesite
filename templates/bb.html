@@ -2,8 +2,8 @@
 
 {% block content %}
 <h2>{{bb.get_kind_display}}:</h2>
-<h2>{{bb.title}}</h2>
-<h1>{{bb.price}}</h1>
+<h2>{{bb.title|capfirst}}</h2>
+<h1>{{bb.price|default:"У товара нет цены"}}</h1>
 <h3>{{bb.content}}</h3>
 <h4>{{bb.published}}<br></h4>
 
