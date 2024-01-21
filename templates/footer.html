@@ -8,7 +8,7 @@
 </head>
 <body style = "background-color: #1b1b1b;color: white;">
     <header>
-        <a href="{% url 'index' %}">Главная страница</a>
+        <a href="{% url 'bboard:index' %}">Главная страница</a>
     </header>
     {% for str in content%}
     <p style = "font-size: 20px;">{{str}}</p>

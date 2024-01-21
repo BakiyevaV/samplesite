@@ -33,6 +33,9 @@
         </section>
         <div class = 'advert'>Здесь может быть ваша реклама</div>
     </div>
-    <footer>&copy;1982 &ndash; {% now 'Y' %}</footer>
+    <footer>&copy;1982 &ndash; {% now 'Y' %}
+        <a href = "{% url 'bboard:about' %}">О нас </a>
+        <a href = "{% url 'bboard:contacts' %}">Контакты </a>
+    </footer>
 </body>
 </html>
