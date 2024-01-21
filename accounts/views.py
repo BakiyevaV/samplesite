@@ -4,7 +4,10 @@ import datetime
 from django.http import HttpHeaders
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView
+from django.views.generic.list import MultipleObjectTemplateResponseMixin, ListView
+
 from .models import Clients
 from .forms import UserForm, LoginForm
 from django.shortcuts import redirect
@@ -13,6 +16,12 @@ class UserCreateView(CreateView):
     template_name = 'registration.html'
     form_class = UserForm
     model = Clients
+    success_url = "index.html"
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.save()
+        return redirect(reverse('bboard:index'))
+
 def login_view(request):
     if request.method == 'POST':
         request_write(request)
@@ -63,6 +72,31 @@ def decoder(value):
     elif isinstance(value, HttpHeaders):
         return dict(value)
     return value
+
+class AllUsersView(ListView):
+    template_name = 'users.html'
+    model = Clients
+    context_object_name = 'users'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(Clients.objects.all())
+        context['users'] = Clients.objects.all()
+        return context
+
+class UserDetailView(DetailView):
+    model = Clients
+    template_name = 'userdetail.html'
+    context_object_name = 'user'
+    pk_url_kwarg = 'user_id'
+    def get_object(self, queryset=None):
+        return Clients.objects.get(id=self.kwargs['user_id'])
+
+
+
+
+
+
+
 
 
 
