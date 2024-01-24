@@ -42,8 +42,7 @@ class Clients(models.Model):
     class Meta:
         # доп настройки модели
         verbose_name_plural = 'Пользователи'
-        verbose_name = 'Пользователь'
-        ordering = ['pk'] #можно несколько параметров
+        verbose_name = 'Пользователь'#можно несколько параметров
 
 
 # Create your models here.

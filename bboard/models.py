@@ -156,7 +156,7 @@ class Bb(models.Model):
         # доп настройки модели
         verbose_name_plural = 'Объявления'
         verbose_name = 'Объявление'
-        ordering = ['-published'] #можно несколько параметров
+        ordering = ['title'] #можно несколько параметров
         # order_with_respect_to = 'rubric'
 
 

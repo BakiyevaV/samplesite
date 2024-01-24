@@ -70,7 +70,7 @@ nav {
 }
 
 footer{
-    min-height: 100px;
+    min-height: 80px;
     width: 100vw;
     border-top: 1px solid grey;
     display: flex;
@@ -100,7 +100,7 @@ footer{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     overflow-y:scroll;
-    max-height: 700px;
+    max-height: 600px;
 }
 .text{
     width: 60vw;

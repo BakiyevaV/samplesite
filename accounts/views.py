@@ -1,10 +1,11 @@
 import json
 import datetime
+import calendar
 
 from django.http import HttpHeaders
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import MultipleObjectTemplateResponseMixin, ListView
 
@@ -81,6 +82,50 @@ class AllUsersView(ListView):
         context = super().get_context_data(**kwargs)
         print(Clients.objects.all())
         context['users'] = Clients.objects.all()
+        return context
+
+class AllUsersView(ArchiveIndexView):
+    model = Clients
+    template_name = 'users.html'
+    date_field = 'birth_date'
+    date_list_period = 'month'
+    context_object_name = 'users'
+    allow_empty = True
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        updated_date_list = []
+        for date in context['date_list']:
+            month_name = calendar.month_name[date.month]
+            updated_date_list.append({
+                'year': date.year,
+                'month': month_name,
+                'day': date.day
+            })
+
+        context['date_list'] = updated_date_list
+        return context
+
+class UsersByPeriodView(MonthArchiveView):
+    model = Clients
+    template_name = 'users.html'
+    date_field = 'birth_date'
+    date_list_period = 'month'
+    month_format = '%m'
+    context_object_name = 'users'
+    allow_empty = True
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        updated_date_list = []
+        for date in context['date_list']:
+            month_name = calendar.month_name[date.month]
+            updated_date_list.append({
+                'year': date.year,
+                'month': month_name,
+                'day': date.day
+            })
+
+        context['date_list'] = updated_date_list
         return context
 
 class UserDetailView(DetailView):
