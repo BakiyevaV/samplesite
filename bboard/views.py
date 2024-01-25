@@ -1,5 +1,6 @@
 import calendar
 
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -11,6 +12,37 @@ from django.views.generic.base import TemplateView, RedirectView
 from .forms import BbForm,CommentsForm
 from .models import Bb, Rubric, Comments
 
+
+def index(request):
+    bbs = Bb.objects.all()
+    rubrics = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt=0)
+    paginator = Paginator(bbs, per_page=2, orphans=1)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+
+    context = {'bbs': page.object_list, 'rubrics': rubrics, 'page': page}
+    return render(request, 'index.html', context)
+
+class IndexView(ListView):
+    model = Bb
+    template_name = 'index.html'
+    context_object_name = 'bbs'
+    paginate_by = 2
+
+    def get_queryset(self):
+        return Bb.objects.all()
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rubrics'] = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt=0)
+        return context
+
+
+
+
 # class Bbslist(ListView):
 #     model = Bb
 #     template_name = 'index.html'
@@ -20,28 +52,28 @@ from .models import Bb, Rubric, Comments
 #         context['rubrics'] = Rubric.objects.annotate(cnt=Count('bb')).filter(cnt__gt = 0)
 #         return context
 
-class BbIndexView(ArchiveIndexView):
-    model = Bb
-    template_name = 'index.html'
-    date_field = 'published'
-    date_list_period = 'month'
-    context_object_name = 'bbs'
-    allow_empty = True
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        updated_date_list = []
-        for date in context['date_list']:
-            month_name = calendar.month_name[date.month]
-            updated_date_list.append({
-                'year': date.year,
-                'month': month_name,
-                'day': date.day
-            })
-
-        context['date_list'] = updated_date_list
-        context['rubrics'] = Rubric.objects.all()
-        return context
+# class BbIndexView(ArchiveIndexView):
+#     model = Bb
+#     template_name = 'index.html'
+#     date_field = 'published'
+#     date_list_period = 'month'
+#     context_object_name = 'bbs'
+#     allow_empty = True
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         updated_date_list = []
+#         for date in context['date_list']:
+#             month_name = calendar.month_name[date.month]
+#             updated_date_list.append({
+#                 'year': date.year,
+#                 'month': month_name,
+#                 'day': date.day
+#             })
+#
+#         context['date_list'] = updated_date_list
+#         context['rubrics'] = Rubric.objects.all()
+#         return context
 
 
 class BbMonthView(MonthArchiveView):

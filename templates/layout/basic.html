@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Главная{% endblock %} :: Доска объявлений</title>
 <!--    <link rel="stylesheet" href="{% static 'style.css' %}">-->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{{ STATIC_URL }}style.css">
 </head>
 <body class = 'body'>
@@ -34,5 +35,6 @@
         <a href = "{% url 'bboard:about' %}">О нас </a>
         <a href = "{% url 'bboard:contacts' %}">Контакты </a>
     </footer>
+<script href="% static 'bootstrap/js/bootstrap.min.js' %"></script>
 </body>
 </html>
