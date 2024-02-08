@@ -1,0 +1,29 @@
+{% extends "layout/basic.html" %}
+
+{% block content %}
+<div class="grid">
+{% for bb in bbs|dictsort:'price' %}
+    <div  class="{% cycle 'b1' 'b2' 'b3' %}">
+        <a href = "{% url 'bboard:get_detail' bb.pk %}">
+        {{ forloop.counter }} - {{bb.price}}
+            {% if forloop.first %}
+            Первое объявление
+            {% elif forloop.last %}
+            Последнее объявление
+            {% endif %}
+        </a>
+        {% ifchanged bb.rubric.name %}
+
+        <a href = "{% url 'bboard:by_rubric' bb.rubric.pk %}">{{bb.title}}</a>
+
+        {% endifchanged %}
+        <h4>{{bb.content|cut:'е'}}</h4>
+        {% firstof bb.rubric 'На деревню к дедушке' %}
+        <p>{{bb.published|date:"d.m.Y H:i:s"}}</p>
+    </div>
+    {% empty %}
+    <p>Нет объявлений!</p>
+{% endfor %}
+
+</div>
+{% endblock %}
