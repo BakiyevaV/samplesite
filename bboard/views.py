@@ -1,6 +1,7 @@
 import calendar
 
 from django.contrib.auth.decorators import user_passes_test
+from django.db import transaction
 from django.db.models import Count
 from django.forms.formsets import ORDERING_FIELD_NAME
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponsePermanentRedirect, HttpResponseNotFound, Http404
@@ -10,7 +11,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, ListView, DeleteView, ArchiveIndexView, MonthArchiveView, \
     WeekArchiveView, UpdateView
 from django.views.generic.base import TemplateView, RedirectView
-from .forms import BbForm,CommentsForm
+from .forms import BbForm, CommentsForm, SearchForm
 from .models import Bb, Rubric, Comments
 from django.forms import modelformset_factory, inlineformset_factory
 
@@ -187,6 +188,8 @@ def edit(request, pk):
         context = {'form': bbf}
         return render(request, 'update.html', context)
 
+def commit_handler():
+    print('СOMMITED')
 def rubrics(request):
     RubricFormSet = modelformset_factory(Rubric, fields=('name',),
                                          can_order=True,
@@ -199,9 +202,19 @@ def rubrics(request):
             instances = formset.save(commit=False)
             for obj in formset:
                 if obj.cleaned_data:
-                    rubric = obj.save(commit=False)
-                    rubric.order = obj.cleaned_data[ORDERING_FIELD_NAME]
-                    rubric.save()
+
+                    sp = transaction.savepoint()
+                    try:
+                        rubric = obj.save(commit=False)
+                        rubric.order = obj.cleaned_data[ORDERING_FIELD_NAME]
+                        rubric.save()
+                        transaction.savepoint_commit(sp)
+                    except:
+                        transaction.savepoint_rollback(sp)
+                        transaction.commit()
+
+                    transaction.on_commit(commit_handler )
+
 
             for obj in formset.deleted_objects:
                 obj.delete()
@@ -234,6 +247,23 @@ def bbs(request, rubric_id):
         formset = BbsFormSet(instance=rubric)
         context = {'formset': formset, 'current_rubric': rubric, 'user': request.user.username}
         return render(request, 'bbs.html', context)
+
+
+def Search(request):
+    if request.method == 'POST':
+        sf = SearchForm(request.POST)
+        if sf.is_valid():
+            keyword = sf.cleaned_data['keyword']
+            rubric_id = sf.cleaned_data['rubric'].pk
+            current_rubric = sf.cleaned_data['rubric']
+            bbs = Bb.objects.filter(title__iregex=keyword, rubric=rubric_id)
+            context = {'bbs':bbs, 'rubric': current_rubric, 'keyword': keyword}
+            return render(request, 'search_results.html', context)
+    else:
+        sf = SearchForm()
+        context = {'form': sf}
+        return render(request, 'search.html', context)
+
 
 
 

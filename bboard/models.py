@@ -27,10 +27,34 @@ def validate_even(val):
 #             raise ValidationError('Число %(value)s должно находиться в диапазоне от: %(min)s до: %(max)s ',
 #                                   code='out_of_range', params={'value':val, 'min': self.min_value, 'max': self.max_value})
 
+class RubricQuerySet(models.QuerySet):
+    def order_by_bb_count(self):
+        return self.annotate(cnt=models.Count('bb')).order_by('-cnt')
+class RubricManager(models.Manager):
+    def get_queryset(self):
+        # return super().get_queryset().order_by('order', 'name')
+        return RubricQuerySet(self.model, using=self._db)
+    def order_by_bb_count(self):
+        # return super().get_queryset().annotate(cnt=models.Count('bb')).order_by('-cnt')
+        return self.get_queryset().order_by_bb_count()
+
+
+class BbManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('price')
+
+class RubricQuerySet(models.QuerySet):
+    def order_by_bb_count(self):
+        return self.annotate(cnt=models.Count('bb')).order_by('-cnt')
+
+
 
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название',unique=True)
     order = models.SmallIntegerField(default=0, db_index=True)#unique for day,/unique for month
+    bbs = RubricManager()
+    # objects = models.Manager()
+    objects = RubricQuerySet.as_manager()
     # slug = models.SlugField (max_length = 160, unique = True)
     #db_index индексация поиска, бинарные деревья
 
@@ -100,6 +124,8 @@ class Bb(models.Model):
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Опубликовано")#auto_now_add - заполнение поля текущим временем в момент создания не изменяется
     updated = models.DateTimeField(auto_now=True, db_index=True, verbose_name="Опубликовано")
     feature = models.CharField(max_length=1, choices=Features.choices, default=Features.USED, verbose_name="Свойство")#auto_now - заполнение поля текущим временем в момент создания обновляемое
+    by_price = BbManager()
+    objects = models.Manager()
     #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #editable=False вывод в форму)
     """типы полей:
     -charfield - текстовое поле (обязательно max_length)
@@ -174,4 +200,6 @@ class Comments(models.Model):
         verbose_name_plural = 'Комментарии'
         verbose_name = 'Комментарий'
         ordering = ['-issue_date'] #можно несколько параметров
+
+
 

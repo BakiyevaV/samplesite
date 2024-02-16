@@ -23,4 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('bboard.urls', namespace='bboard')),
     path('authorization/', include('accounts.urls', namespace='accounts'))
+
+]
+
+urlpatterns += [
+    path('captcha/', include('captcha.urls')),
 ]

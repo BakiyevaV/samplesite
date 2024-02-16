@@ -4,7 +4,7 @@ from django.views.generic import ArchiveIndexView
 
 from bboard.models import Bb
 from bboard.views import BbCreateView, Categorylist, BbDetail, CreateComment, DeleteComment, AboutUs, Contacts, \
-    BbIndexView, BbRedirectView, BbMonthView, BbEditView, edit, rubrics,bbs
+    BbIndexView, BbRedirectView, BbMonthView, BbEditView, edit, rubrics, bbs, Search
 
 app_name = 'bboard'
 
@@ -23,5 +23,6 @@ urlpatterns = [
     path('year/<int:year>/', BbRedirectView.as_view(), name='redirect'),
     path('<int:year>/<int:month>/', BbMonthView.as_view(), name='month'),
     path('accounts/login/', LoginView.as_view(), name='login'),
-    path('accounts/logout/', LogoutView.as_view(), name='logout')
+    path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    path('search/', Search, name='search')
 ]
