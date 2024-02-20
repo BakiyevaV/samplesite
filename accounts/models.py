@@ -1,9 +1,12 @@
+from django.contrib.postgres.fields import DateTimeRangeField, ArrayField, HStoreField, CICharField
+from django.contrib.postgres.indexes import GistIndex
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.core import validators
 from django.contrib.auth.password_validation import MinimumLengthValidator, NumericPasswordValidator, CommonPasswordValidator
 from django.contrib.auth.models import User
+from django.db.models import JSONField
 
 class PassValidator():
     def __init__(self,password):
@@ -73,3 +76,41 @@ class Kit(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
     spare = models.ForeignKey(Spare, on_delete=models.CASCADE)
     count = models.PositiveIntegerField(default=0)
+
+class PGSRoomReserving(models.Model):
+    name = models.CharField(max_length=20, verbose_name='Помещение')
+    reserving = DateTimeRangeField(verbose_name='Время резервирования')
+    cancelled = models.BooleanField(default=False, verbose_name='Отменить резервирования')
+    class Meta:
+        indexes = [
+            GistIndex(fields=['reserving'], name='i_pgsrr_reserving',
+                      opclasses=('range_ops',),
+                      fillfactor=50)
+        ]
+
+class PGSRubric(models.Model):
+    name = models.CharField(max_length=20, verbose_name='Имя')
+    description = models.TextField(verbose_name='Описание')
+    tags = ArrayField(base_field=models.CharField(max_length=20), verbose_name='Теги')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=('name', 'description'), name='i_pgsrubric_name_description',
+                         opclasses=('varchar_pattern_ops', 'bpchar_pattern_ ops'))
+        ]
+
+
+class PGSProject(models.Model):
+    name = models.CharField(max_length=40, verbose_name='Название')
+    platform = ArrayField(base_field=ArrayField(
+        base_field=models.CharField(max_length=20)),
+        verbose_name='Используемые платформы')
+
+class PGSProject2(models.Model):
+    name = models.CharField(max_length=40, verbose_name='Название')
+    platform = HStoreField(verbose_name='Используемые платформы')
+
+class PGSProject3(models.Model):
+    name = CICharField(max_length=40, verbose_name='Название')
+    data = JSONField()
+
