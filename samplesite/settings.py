@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'bboard.apps.BboardConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.postgres',
-    'captcha'
+    'captcha',
+    'precise_bbcode',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,7 @@ CAPTHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 CAPTCHA_LENGTH = 4
 CAPTCHA_WORDS_DICTIONARY = '/static/words.txt'
 CAPTCHA_TIMEOUT = 5
+
+
+#BBcode
+BBCODE_NEWLINE = "<br>"

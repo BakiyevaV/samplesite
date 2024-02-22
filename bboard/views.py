@@ -11,6 +11,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, ListView, DeleteView, ArchiveIndexView, MonthArchiveView, \
     WeekArchiveView, UpdateView
 from django.views.generic.base import TemplateView, RedirectView
+from precise_bbcode.bbcode import get_parser
+
 from .forms import BbForm, CommentsForm, SearchForm
 from .models import Bb, Rubric, Comments
 from django.forms import modelformset_factory, inlineformset_factory
@@ -125,6 +127,12 @@ class BbDetail(DetailView):
         context['Bb'] = Bb.objects.filter(pk=self.kwargs['bb_id'])
         context['comments'] = Comments.objects.all().filter(bb=self.kwargs['bb_id'])
         return context
+
+def detail(request, pk):
+    parser = get_parser()
+    bb = Bb.objects.get(pk=pk)
+    parsed_content = parser.render(bb.content)
+    pass
 class CreateComment(CreateView):
     template_name = 'bb.html'
     form_class = CommentsForm
