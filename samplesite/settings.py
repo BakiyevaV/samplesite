@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'captcha',
     'precise_bbcode',
+    "bootstrap4",
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,11 @@ CAPTCHA_TIMEOUT = 5
 
 #BBcode
 BBCODE_NEWLINE = "<br>"
+
+BOOTSTRAP4 = {
+    'horizontal_label_class': "col-md-3",
+    'horizontal_field_class': "col-md-9",
+    'required_css_class': "",
+    'success_css_class': "has-success",
+    'error_css_class': "has-error",
+}

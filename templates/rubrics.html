@@ -1,4 +1,5 @@
 {% extends "layout/basic.html" %}
+{% load bootstrap4 %}
 
 {% block title %}Изменение рубрик{% endblock %}
 
@@ -6,7 +7,8 @@
 <h2>Изменение рубрик</h2>
     <form  method = "post">
     {% csrf_token %}
-    {{ formset.management_form }}
-    <input type="submit" value="Сохранить">
+    {% bootstrap_formset formset %}
+    {% buttons submit='Сохранить' reset='Сбросить' %}{% endbuttons form layout='inline' field_class='col-md-10' required_css_class='has-error'%}
+
     </form>
 {% endblock %}
