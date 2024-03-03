@@ -37,10 +37,5 @@
         </form>
     {% endfor %}
 </div>
-
-<form method = 'post' action="{% url 'bboard:update' bb.pk %}">
-    {% csrf_token %}
-    {{ form.title }}
-    <input type="submit" value="Редактировать">
-</form>
+    <a href="{% url 'bboard:update' bb.pk %}"><button >Редактировать</button></a>
 {% endblock %}

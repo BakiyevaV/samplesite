@@ -2,23 +2,26 @@
 {% load bootstrap4 %}
 
 {% block title %}Добавление объявления{% endblock %}
-
 {% block content %}
-<h2>Добавление объявления</h2>
-    {% bootstrap_messages %}
-    <form method="post">
-        {% csrf_token %}
-{#        {% bootstrap_field form.title placeholder='что подаем?' addon_before='Какой-то текст'%}#}
+    {% if message %}
+        <h2>{{ message }}</h2>
+    {% else %}
+            <h2>Добавление объявления</h2>
+                {% bootstrap_messages %}
+                <form method="post">
+                    {% csrf_token %}
+            {#        {% bootstrap_field form.title placeholder='что подаем?' addon_before='Какой-то текст'%}#}
+                    {% bootstrap_form form layout='inline' field_class='col-md-10'%}
+            {#        {% bootstrap_form form %}#}
+            {#        {% buttons submit='Добавить' %}{% endbuttons %}#}
+                    {% bootstrap_button content='Добавить' button_type='submit' button_class='btn-secondary' %}
+                </form>
 
 
-        {% bootstrap_form form layout='inline' field_class='col-md-10' required_css_class='has-error'%}
-{#        {% bootstrap_form form %}#}
-{#        {% buttons submit='Добавить' %}{% endbuttons %}#}
-        {% bootstrap_button content='Добавить' button_type='submit' button_class='btn-secondary' %}
+    {% endif %}
+{% endblock %}
 
 
-
-    </form>
 {#{% if form.is_multipart %}#}
 {#    <form  method="post" enctype="multipart/form-data">#}
 {#{% else %}#}
@@ -31,4 +34,3 @@
 {##}
 {#    <input type="submit" value="Добавить">#}
 {#    </form>#}
-{% endblock %}

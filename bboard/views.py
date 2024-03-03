@@ -1,5 +1,9 @@
 import calendar
 
+from django.contrib.auth.mixins import AccessMixin
+from django.contrib.auth.views import redirect_to_login
+
+
 from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
 from django.db.models import Count
@@ -90,7 +94,7 @@ class Categorylist(ListView):
         return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
 
 
-class BbCreateView(CreateView):
+class BbCreateView(CreateView, AccessMixin):
     template_name = 'create.html'
     form_class = BbForm
     success_url = reverse_lazy('bboard:index')
@@ -99,6 +103,18 @@ class BbCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if not request.user.has_perm('bboard.add_bb'):
+                return render(request, self.template_name, {'message': 'Нет доступа на создание объявлений'})
+            else:
+                return render(request, self.template_name, {'form': self.form_class})
+        else:
+            return redirect_to_login(reverse('bboard:index'))
+        return super().get(request, *args, **kwargs)
+
+
 
 class AboutUs(TemplateView):
     template_name = 'footer.html'
@@ -179,7 +195,8 @@ class BbEditView(UpdateView):
 
 
 def edit(request, pk):
-    bb=Bb.objects.get(pk=pk)
+    bb = Bb.objects.get(pk=pk)
+    print(bb)
     if request.method == 'POST':
         bbf = BbForm(request.POST, instance=bb)
         if bbf.is_valid():
@@ -192,9 +209,13 @@ def edit(request, pk):
             context = {'form': bbf}
             return render(request, 'update.html', context)
     else:
-        bbf = BbForm(instance=bb)
-        context = {'form': bbf}
-        return render(request, 'update.html', context)
+       if request.user.has_perm('bboard.add_bb'):
+            bbf = BbForm(instance=bb)
+            print(bbf['title'].value())
+            context = {'form': bbf}
+            return render(request, 'update.html', context)
+       else:
+           return render(request, 'update.html', {'message': 'Нет доступа на редактирование'})
 
 def commit_handler():
     print('СOMMITED')

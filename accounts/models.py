@@ -37,7 +37,7 @@ class PassValidator():
 
 class Clients(models.Model):
     login = models.CharField(max_length=30, unique=True)
-    password = models.CharField(max_length=30, unique=True, validators = [PassValidator])
+    password = models.CharField(max_length=30, unique=True, validators=[PassValidator])
     email = models.CharField(max_length=30, unique=True, validators=[validators.RegexValidator(regex='\w[\w\.-]*\w+@\w[\w\.]*\.[a-zA-Z]{2,3}')], error_messages= {'invalid':'Введите корректный адрес электронной почты'})
     birth_date = models.DateField()
     is_blocked = models.BooleanField(default=False)

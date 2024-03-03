@@ -2,46 +2,60 @@ import json
 import datetime
 import calendar
 
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.http import HttpHeaders
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView
+from django.contrib.auth.views import LoginView
 from django.views.generic.list import MultipleObjectTemplateResponseMixin, ListView
 
 from .models import Clients
-from .forms import UserForm, LoginForm
+from .forms import UserForm, MyLoginForm
 from django.shortcuts import redirect
+
 
 class UserCreateView(CreateView):
     template_name = 'registration.html'
     form_class = UserForm
-    model = Clients
+    model = User
     success_url = "index.html"
+
     def form_valid(self, form):
         user = form.save(commit=False)
+        user.set_password(form.cleaned_data['password'])
         user.save()
         return redirect(reverse('bboard:index'))
 
-def login_view(request):
-    if request.method == 'POST':
-        request_write(request)
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['login']
-            password = form.cleaned_data['password']
-            user = None
-            users = Clients.objects.all()
-            for u in users:
-                if u.login == username and u.password == password:
-                    user = u
-            if user is not None:
-                return redirect(reverse('bboard:index'))
-            else:
-                return redirect(reverse('registration'))
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+class UserLoginView(LoginView):
+    template_name = 'login.html'
+    form_class = MyLoginForm
+
+#
+# def login_view(request):
+#     if request.method == 'POST':
+#         request_write(request)
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data['login']
+#             password = form.cleaned_data['password']
+#             user = None
+#             users = Clients.objects.all()
+#             users_admin = User.objects.all()
+#             for u in users_admin:
+#                 if u.username == username:
+#                     user = u
+#             if user is not None:
+#                 return redirect(reverse('bboard:index'))
+#             else:
+#                 context = {'form': form, 'error_message': 'Неверные учетные данные. Пожалуйста, проверьте логин и пароль.'}
+#                 return render(request, 'login.html', context)
+#     else:
+#         form = LoginForm()
+#     return render(request, 'login.html', {'form': form})
 
 def request_write(request):
     data = {}

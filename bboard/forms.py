@@ -34,8 +34,6 @@ class BbForm(ModelForm):
         errors = {}
         if not self.cleaned_data.get('content'):
             errors['content'] = ValidationError('Нет описания')
-        if self.cleaned_data.get('price') < 0:
-            errors['price'] = ValidationError('Что с ценой?')
         if errors:
             raise ValidationError(errors)
 class CommentsForm(ModelForm):
