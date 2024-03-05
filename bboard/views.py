@@ -1,5 +1,6 @@
 import calendar
 
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import AccessMixin
 from django.contrib.auth.views import redirect_to_login
 
@@ -293,8 +294,30 @@ def Search(request):
         context = {'form': sf}
         return render(request, 'search.html', context)
 
-
-
+# def my_login(request):
+#     username = request.POST.get('username')
+#     password = request.POST.get('password')
+#     user = authenticate(request, username=username, password=password)
+#     if user is not None:
+#         login(request, user)
+#     else:
+#         pass
+#
+#
+# def my_logout(request):
+#     logout(request)
+#
+# def hide_comment(request):
+#     if request.user.has_perm('accounts.hide_comment'):
+#         pass
+# from django.contrib.auth.models import User
+# admin = User.objects.get(name='admin')
+# if admin.check_password('password'):
+#     # дальнейшие действия при совпадении
+#     pass
+# else:
+#     # дальнейшие действия при несовпадении
+#     pass
 
 
 

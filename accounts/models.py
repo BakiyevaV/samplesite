@@ -114,3 +114,10 @@ class Kit(models.Model):
 #     name = CICharField(max_length=40, verbose_name='Название')
 #     data = JSONField()
 
+# class Comment(models.Model):
+#     pass
+#
+#     class Meta:
+#         permissions = (
+#             ('hide_comment', 'Можно скрывать коммент'),
+#         )

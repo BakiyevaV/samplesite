@@ -140,8 +140,17 @@ class UserDetailView(DetailView):
     def get_object(self, queryset=None):
         return Clients.objects.get(id=self.kwargs['user_id'])
 
+# from django.contrib.auth.models import User
+# admin = User.objects.get(name='admin')
+# if admin.check_password('password'):
+#     # дальнейшие действия при совпадении
+#     pass
+# else:
+#     # дальнейшие действия при несовпадении
+#     pass
 
-
+# admin.set_password('newpassword')
+# admin.save()
 
 
 
