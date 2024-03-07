@@ -15,7 +15,7 @@
     <div class = 'rubrics'>
      {% for rubric in rubrics %}
         {% with bb_count=rubric.cnt %}
-        <a href="{#% url 'bboard:by_rubric' rubric.pk %#}{{ rubric.get_absolute_url }}">
+        <a href="{% url 'bboard:by_rubric' rubric.pk %}{#{ rubric.get_absolute_url }#}">
             {% filter force_escape|upper %}
             {{ rubric }} ({{bb_count}})
             {% endfilter %}

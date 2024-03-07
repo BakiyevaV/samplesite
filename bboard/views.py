@@ -52,7 +52,7 @@ class BbIndexView(ArchiveIndexView):
             })
 
         context['date_list'] = updated_date_list
-        context['rubrics'] = Rubric.objects.all()
+        # context['rubrics'] = Rubric.objects.all()
         return context
 
 
